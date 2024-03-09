@@ -38,6 +38,22 @@ async function handlePullRequestOpened({ octokit, payload }) {
   );
 
   try {
+    const data = await octokit.request(
+      "POST /repos/{orgs}/{repo}/pulls/{pull_number}/requested_reviewers",
+      {
+        orgs: payload.repository.owner.login,
+        repo: payload.repository.name,
+        pull_number: payload.pull_request.number,
+        team_reviewers: ["web-team"],
+        headers: {
+          "X-GitHub-Api-Version": "2022-11-28",
+        },
+      }
+    );
+
+    console.log("Requested reviewers");
+    console.log(data);
+
     await octokit.request(
       "POST /repos/{owner}/{repo}/issues/{issue_number}/comments",
       {
