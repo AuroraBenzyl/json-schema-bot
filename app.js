@@ -27,6 +27,9 @@ const app = new App({
   },
 });
 
+// Authenticate as an Installation Id
+
+
 // This defines the message that your app will post to pull requests.
 const messageForNewPRs =
   "Thanks for opening a new PR! Please follow our contributing guidelines to make your PR easier to review.";
@@ -38,6 +41,25 @@ async function handlePullRequestOpened({ octokit, payload }) {
   );
 
   try {
+
+    const octokit = await app.getInstallationOctokit(payload.installation.id);
+
+    const data = await octokit.request(
+      "POST /repos/{orgs}/{repo}/pulls/{pull_number}/requested_reviewers",
+      {
+        orgs: payload.repository.owner.login,
+        repo: payload.repository.name,
+        pull_number: payload.pull_request.number,
+        team_reviewers: ["web-team"],
+        headers: {
+          "X-GitHub-Api-Version": "2022-11-28",
+        },
+      }
+    );
+
+    console.log("Requested reviewers");
+    console.log(data);
+
     await octokit.request(
       "POST /repos/{owner}/{repo}/issues/{issue_number}/comments",
       {
