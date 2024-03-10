@@ -29,6 +29,51 @@ const app = new App({
 
 // Authenticate as an Installation Id
 
+const messageForNewIssues =
+  "Thanks for opening a new issue! Please follow our contributing guidelines to make your issue easier to review.";
+
+// This adds an event handler that your code will call later. When this event handler is called, it will log the event to the console. Then, it will use GitHub's REST API to add a comment to the issue that triggered the event.
+
+async function handleIssueOpened({ octokit, payload }) {
+  console.log(`Received an issue event for #${payload.issue.number}`);
+
+  try {
+    await octokit.request(
+      "POST /repos/{owner}/{repo}/issues/{issue_number}/assignees",
+      {
+        owner: payload.repository.owner.login,
+        repo: payload.repository.name,
+        issue_number: payload.issue.number,
+        assignees: ["aialok"],
+        headers: {
+          "X-GitHub-Api-Version": "2022-11-28",
+        },
+      }
+    );
+
+    await octokit.request(
+      "POST /repos/{owner}/{repo}/issues/{issue_number}/comments",
+      {
+        owner: payload.repository.owner.login,
+        repo: payload.repository.name,
+        issue_number: payload.issue.number,
+        body: messageForNewIssues,
+        headers: {
+          "x-github-api-version": "2022-11-28",
+        },
+      }
+    );
+  } catch (error) {
+    if (error.response) {
+      console.error(
+        `Error! Status: ${error.response.status}. Message: ${error.response.data.message}`
+      );
+    }
+    console.error(error);
+  }
+}
+
+app.webhooks.on("issues.opened", handleIssueOpened);
 
 // This defines the message that your app will post to pull requests.
 const messageForNewPRs =
@@ -41,24 +86,36 @@ async function handlePullRequestOpened({ octokit, payload }) {
   );
 
   try {
+    // const octokit = await app.getInstallationOctokit(payload.installation.id);
 
-    const octokit = await app.getInstallationOctokit(payload.installation.id);
+    // const data = await octokit.request(
+    //   "POST /repos/{orgs}/{repo}/pulls/{pull_number}/requested_reviewers",
+    //   {
+    //     orgs: payload.repository.owner.login,
+    //     repo: payload.repository.name,
+    //     pull_number: payload.pull_request.number,
+    //     team_reviewers: ["web-team"],
+    //     headers: {
+    //       "X-GitHub-Api-Version": "2022-11-28",
+    //     },
+    //   }
+    // );
 
-    const data = await octokit.request(
-      "POST /repos/{orgs}/{repo}/pulls/{pull_number}/requested_reviewers",
+    // console.log("Requested reviewers");
+    // console.log(data);
+
+    await octokit.request(
+      "POST /repos/{owner}/{repo}/issues/{issue_number}/assignees",
       {
-        orgs: payload.repository.owner.login,
+        owner: payload.repository.owner.login,
         repo: payload.repository.name,
-        pull_number: payload.pull_request.number,
-        team_reviewers: ["web-team"],
+        issue_number: payload.pull_request.number,
+        assignees: ["aialok"],
         headers: {
           "X-GitHub-Api-Version": "2022-11-28",
         },
       }
     );
-
-    console.log("Requested reviewers");
-    console.log(data);
 
     await octokit.request(
       "POST /repos/{owner}/{repo}/issues/{issue_number}/comments",
