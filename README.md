@@ -1,4 +1,4 @@
-# JSON Schema Bot 
+# JSON Schema Org Bot 
 
 JSON Schema Bot is a basic community operations and continuous integration (CI) bot. 
 
