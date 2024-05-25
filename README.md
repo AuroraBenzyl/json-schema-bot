@@ -12,8 +12,6 @@ In the context of this bot, community operations refer to the tasks that help ma
 
 ## Continuous Integration (CI)
 
-The bot also assists with continuous integration tasks. This includes:
-
 - **Automated Testing:** The bot can automatically run tests whenever code is pushed to the repository.
 - **Code Quality Checks:** The bot can run automated tools to check the quality of the code, such as linters or static analysis tools.
 - **Deployment:** The bot can automatically deploy the application to a specified environment when the code is merged into the main branch.
