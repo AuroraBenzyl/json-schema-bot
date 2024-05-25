@@ -1,4 +1,4 @@
-# JSON Schema Bot
+# JSON Schema Bot 
 
 JSON Schema Bot is a basic community operations and continuous integration (CI) bot. 
 
@@ -17,5 +17,3 @@ The bot also assists with continuous integration tasks. This includes:
 - **Automated Testing:** The bot can automatically run tests whenever code is pushed to the repository.
 - **Code Quality Checks:** The bot can run automated tools to check the quality of the code, such as linters or static analysis tools.
 - **Deployment:** The bot can automatically deploy the application to a specified environment when the code is merged into the main branch.
-
-Please refer to the bot's configuration files for more details on its operations and capabilities.
